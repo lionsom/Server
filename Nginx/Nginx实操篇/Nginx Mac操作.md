@@ -94,7 +94,7 @@ $ nginx -s reload
 
 ```sh
 # 查看状态
-$ ps -ef|grep nginx
+$ ps -ef | grep nginx
 ```
 
 ![](images/006.png)
@@ -319,8 +319,6 @@ http {
 # 六、Vue项目部署到Nginx
 
 Vue打包，看其他地方
-
-
 
 https://juejin.cn/post/6844904096973979662
 

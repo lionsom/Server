@@ -24,7 +24,7 @@
 
 解压
 
-![](media_CrossLocalNet/001.jpg)
+![](media_NATAPP/001.jpg)
 
 前往对应的目录下
 
@@ -47,15 +47,23 @@ natapp
 
 获取 并 配置authtoken
 
-![](media_CrossLocalNet/002.jpg)
+![](media_NATAPP/002.jpg)
 
 
 
+```sh
+# 运行【linux】
+$ ./natapp -authtoken=72cacadb11a24xxx
 ```
-➜ natapp ./natapp -authtoken=72cacadb11a24xxx
-```
 
-![](media_CrossLocalNet/003.jpg)
+> Tunnel Status  Online 代表链接成功
+> Version    当前客户端版本,如果有新版本,会有提示
+> Forwarding   当前穿透 网址 或者端口
+> Web Interface  是本地Web管理界面,可在隧道配置打开或关闭,仅用于web开发测试
+> Total Connections 总连接数
+> **Avg Conn Time 0.00ms 这里不代表,不代表,不代表 延时,需要注意!**
+
+![](media_NATAPP/003.jpg)
 
 
 
