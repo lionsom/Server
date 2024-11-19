@@ -455,3 +455,24 @@ $ brew services restart nginx
 
 
 
+
+
+
+
+```nginx
+# nginx.conf
+....
+# 新增处理指定的路径
+location ^~ /xishan {
+    root   html;
+    index  index.html index.htm;
+    # 如果vue项目使用的是History模式，则必须配置！！！
+    try_files $uri $uri/ /xishan/index.html;  
+}
+....
+```
+
+
+
+
+
