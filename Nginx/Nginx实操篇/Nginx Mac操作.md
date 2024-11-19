@@ -31,12 +31,39 @@ $ brew reinstall nginx
 
 
 
-## 3. 查看nginx的信息
+## 3. 查看nginx安装路径
+
+```sh
+$ ps -ef | grep nginx
+  501 82140     1   0  9:37AM ??         0:00.01 nginx: master process /usr/local/opt/nginx/bin/nginx -g daemon off;
+  501 82141 82140   0  9:37AM ??         0:00.00 nginx: worker process
+  501 83450 19715   0  9:54AM ttys014    0:00.00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn nginx
+```
+
+
+
+## 4. 查看nginx的信息
+
+* `$ ngxin -v`：查看nginx版本
+* `$ nginx -V`：查看nginx版本及安装的本地位置
+
+* `$ brew info nginx`：查看nginx信息
 
 ```sh
 # 查看nginx版本
 $ nginx -v
 nginx version: nginx/1.25.5
+
+
+# 查看nginx版本及安装的本地位置
+$ nginx -V
+nginx version: nginx/1.27.0
+built by clang 15.0.0 (clang-1500.1.0.2.5)
+built with OpenSSL 3.3.0 9 Apr 2024 (running with OpenSSL 3.3.1 4 Jun 2024)
+TLS SNI support enabled
+configure arguments: --prefix=/usr/local/Cellar/nginx/1.27.0 --sbin-path=/usr/local/Cellar/nginx/1.27.0/bin/nginx --with-cc-opt='-I/usr/local/opt/pcre2/include -I/usr/local/opt/openssl@3/include' --with-ld-opt='-L/usr/local/opt/pcre2/lib -L/usr/local/opt/openssl@3/lib' --conf-path=/usr/local/etc/nginx/nginx.conf --pid-path=/usr/local/var/run/nginx.pid --lock-
+......
+
 
 # 查看nginx详细信息
 $ brew info nginx
@@ -50,7 +77,7 @@ Installed
 
 
 
-## 4. 查看nginx.conf配置文件 
+## 5. 查看 `nginx.conf` 配置文件路径
 
 ```sh
 # 测试配置文件的正确性
@@ -61,11 +88,58 @@ nginx: configuration file /opt/homebrew/etc/nginx/nginx.conf test is successful
 
 
 
-## 5. 查看帮助
+## 6. 查看帮助 `$ nginx -h`
 
 ```sh
 $ nginx -h
+nginx version: nginx/1.27.0
+Usage: nginx [-?hvVtTq] [-s signal] [-p prefix]
+             [-e filename] [-c filename] [-g directives]
+
+Options:
+  -?,-h         : this help
+  -v            : show version and exit
+  -V            : show version and configure options then exit
+  -t            : test configuration and exit
+  -T            : test configuration, dump it and exit
+  -q            : suppress non-error messages during configuration testing
+  -s signal     : send signal to a master process: stop, quit, reopen, reload
+  -p prefix     : set prefix path (default: /usr/local/Cellar/nginx/1.27.0/)
+  -e filename   : set error log file (default: /usr/local/var/log/nginx/error.log)
+  -c filename   : set configuration file (default: /usr/local/etc/nginx/nginx.conf)
+  -g directives : set global directives out of configuration file
 ```
+
+
+
+## 7. 服务器路径⭐️
+
+### a. 安装完以后，可以在终端输出的信息里看到一些配置路径
+
+* 文件根目录：`/usr/local/var/www`
+
+* 配置文件路径：`/usr/local/etc/nginx/nginx.conf`
+
+![](images/009.png)
+
+
+
+### b. 通过查找原文件
+
+```sh
+# nginx路径
+$ which nginx  
+$ where nginx
+/usr/local/bin/nginx
+```
+
+![](images/010.png)
+
+![](images/011.png)
+
+![](images/012.png)
+
+![](images/013.png)
 
 
 
@@ -143,7 +217,7 @@ $ brew --caskroom
 # nginx路径
 $ which nginx  
 $ where nginx
-/opt/homebrew/bin/nginx
+/usr/local/bin/nginx
 
 # 配置文件路径
 $ nginx -t
@@ -318,15 +392,62 @@ http {
 
 # 六、Vue项目部署到Nginx
 
-Vue打包，看其他地方
-
 https://juejin.cn/post/6844904096973979662
 
 
 
+## 1. 打包Vue3 + Vite
+
+最初是的项目，没有任何多余配置！！！
+
+```sh
+$ pnpm build
+```
+
+![](images/008.png)
 
 
 
+## 2. 放到nginx服务器下
+
+![](images/013.png)
+
+
+
+## 3. 启动、运行
+
+```sh
+$ brew services restart nginx
+```
+
+![](images/014.png)
+
+
+
+### a. 问题：再次刷新 404
+
+![](images/015.png)
+
+### b. 原因
+
+* 官网：https://cli.vuejs.org/zh/guide/deployment.html#docker-nginx
+
+* 参考：https://blog.csdn.net/qq_55272229/article/details/131540101
+* 参考：https://learnku.com/articles/34440
+
+因为vue打包输出的是单页网页应用，只有一个index.html入口，其他路径是由前端路由去跳转的，服务器目录下没有对应物理路径，所以就会报404。
+
+![](images/016.png)
+
+
+
+
+
+## 4. 自定义包文件路径
+
+目前包是放在根目录下，这样不规范，新建文件`xishan`，此刻链接就不对了！！！
+
+![](images/013.png)
 
 
 
