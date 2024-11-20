@@ -424,11 +424,11 @@ $ brew services restart nginx
 
 
 
-### a. 问题：再次刷新 404
+## 4. 问题：再次刷新 404
 
 ![](images/015.png)
 
-### b. 原因
+### a. 原因
 
 * 官网：https://cli.vuejs.org/zh/guide/deployment.html#docker-nginx
 
@@ -437,13 +437,42 @@ $ brew services restart nginx
 
 因为vue打包输出的是单页网页应用，只有一个index.html入口，其他路径是由前端路由去跳转的，服务器目录下没有对应物理路径，所以就会报404。
 
+
+
+### b. 方法一：使用 `webHashHsitory`（未尝试）
+
+修改`router` 文件夹下的`index` 配置文件，将`history` 方式改为`createWebHashHistory` ；因为hash方式的页面地址在刷新时只会刷新`#` 后面的内容，前面会保持不变。
+
+```js
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
+import HomeView from '../views/HomeView.vue'
+
+const router = createRouter({
+  // 引入正式环境的打包路径
+  history: createWebHashHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: HomeView
+    },
+  ]
+})
+
+export default router
+```
+
+
+
+### c. 方案二：修改`nginx.conf` 配置
+
+* [Vue CLI官网 - Docker (Nginx)](https://cli.vuejs.org/zh/guide/deployment.html#docker-nginx)
+
 ![](images/016.png)
 
 
 
-
-
-## 4. 自定义包文件路径
+## 5. 自定义包文件路径
 
 目前包是放在根目录下，这样不规范，新建文件`xishan`，此刻链接就不对了！！！
 
@@ -451,18 +480,45 @@ $ brew services restart nginx
 
 
 
+### a. vite配置：在 `vite.config.js` 中配置 `base` 的路径
+
+* [Vue项目Nginx配置自定义路径别名](https://blog.csdn.net/m0_46219714/article/details/137603303)
+* [Vite官网 - public base path](https://cn.vitejs.dev/guide/build.html#public-base-path)
+* [Vite官网 - 配置选项 - base](https://cn.vitejs.dev/config/shared-options#base)
+
+在打包项目之前需要在 `vite.config.js` 中配置 `base` 的路径，[路径名](https://so.csdn.net/so/search?q=路径名&spm=1001.2101.3001.7020)为服务器自定义的路由别名：
+
+```json
+import { fileURLToPath, URL } from "node:url";
+
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+
+export default defineConfig({
+  plugins: [vue()],
+  server: {
+    host: true,
+  },
+  
+  base: "/xishan/", // 这个配置很重要，要和nginx配置的路径别名一致
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
+});
+```
 
 
 
+### b. `nginx.conf` 配置
 
-
-
-
+新增location后，重启Nginx，在浏览器输入`http://服务器ip/xishan`访问即可
 
 ```nginx
 # nginx.conf
 ....
-# 新增处理指定的路径
+# 新增location块，用于处理/xishan路径的请求
 location ^~ /xishan {
     root   html;
     index  index.html index.htm;
@@ -471,6 +527,75 @@ location ^~ /xishan {
 }
 ....
 ```
+
+![](images/017.png)
+
+
+
+## 6. 此刻正常打开页面
+
+正常打开页面：`http://localhost:8099/xishan/`
+
+![](images/018.png)
+
+
+
+## 7. 正常路由跳转：`router.push('/demo')`
+
+![](images/020.png)
+
+![](images/021.png)
+
+路由跳转：`router.push('/demo')`
+
+![](images/022.png)
+
+![](images/019.png)
+
+## 8. 打开静态资源失败
+
+打开本地资源
+
+![](images/023.png)
+
+发现没有配置二级路径 `/xishan/`
+
+![](images/024.png)
+
+### a. 方案一：增加 `.env` 文件
+
+![](images/025.png)
+
+![](images/026.png)
+
+带上前缀：`import.meta.env.VITE_BASE_API_URL`
+
+![](images/028.png)
+
+* 运行`development环境`：`pnpm dev`   
+* 运行`production` 环境：`pnpm dev:production`   
+
+```json
+// package.json
+......
+  "scripts": {
+    "dev": "vite --open",
+    "dev:production": "vite --open --mode production",
+  }
+......
+```
+
+
+
+### b. 方案二：vite配置：在 `vite.config.js` 中配置 `base` 的路径
+
+![](images/027.png)
+
+
+
+
+
+
 
 
 
