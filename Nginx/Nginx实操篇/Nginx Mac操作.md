@@ -267,53 +267,33 @@ nginx: configuration file /opt/homebrew/etc/nginx/nginx.conf test is successful
 
 大致内容
 
-```sh
-#user  nobody;
-worker_processes  1;
-
-#error_log  logs/error.log;
-#error_log  logs/error.log  notice;
-#error_log  logs/error.log  info;
-
-#pid        logs/nginx.pid;
-
-
-events {
-    worker_connections  1024;
-}
-
-
+```nginx
 http {
-    include       mime.types;
-    default_type  application/octet-stream;
+   server {
+        # 监听的端口号
+        listen       9200;
 
-    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
-    #                  '$status $body_bytes_sent "$http_referer" '
-    #                  '"$http_user_agent" "$http_x_forwarded_for"';
-
-    #access_log  logs/access.log  main;
-
-    sendfile        on;
-    #tcp_nopush     on;
-
-    #keepalive_timeout  0;
-    keepalive_timeout  65;
-
-    #gzip  on;
-
-    server {
-        listen       8082;
+        # 服务名称 生产环境要修改成 公网ip 如 47.105.134.120
         server_name  localhost;
 
-        #charset koi8-r;
+        # 配置根目录的地址是以 nginx 下的 html 文件夹为根目录来查找的
+        root html;
 
-        #access_log  logs/host.access.log  main;
-
+        # 配置默认的主页显示 比如 47.105.134.120:8080 显示的 index 页面
         location / {
-            root   html;
-            index  index.html index.htm;
+            try_files $uri $uri/ /index.html;	    
         }
-
+        # 配置我们的 admin 的前台服务 比如 47.105.134.120:8080/admin/index.html
+        location ^~ /admin {
+            # 处理 Vue 单页面应用 路由模式为 history 模式刷新页面 404 的问题
+            try_files $uri $uri/ /admin/index.html;
+        }
+        # 如果你想配置多个项目的话，可以复制上面的，修改一下就可以同时部署多个前端项目了
+        # 比如
+        # location ^~ /blog {
+            # 处理 Vue 单页面应用 路由模式为 history 模式刷新页面 404 的问题
+            # try_files $uri $uri/ /blog/index.html;
+        # }
         #error_page  404              /404.html;
 
         # redirect server error pages to the static page /50x.html
@@ -322,66 +302,8 @@ http {
         location = /50x.html {
             root   html;
         }
-
-        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
-        #
-        #location ~ \.php$ {
-        #    proxy_pass   http://127.0.0.1;
-        #}
-
-        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
-        #
-        #location ~ \.php$ {
-        #    root           html;
-        #    fastcgi_pass   127.0.0.1:9000;
-        #    fastcgi_index  index.php;
-        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
-        #    include        fastcgi_params;
-        #}
-
-        # deny access to .htaccess files, if Apache's document root
-        # concurs with nginx's one
-        #
-        #location ~ /\.ht {
-        #    deny  all;
-        #}
     }
 
-
-    # another virtual host using mix of IP-, name-, and port-based configuration
-    #
-    #server {
-    #    listen       8000;
-    #    listen       somename:8080;
-    #    server_name  somename  alias  another.alias;
-
-    #    location / {
-    #        root   html;
-    #        index  index.html index.htm;
-    #    }
-    #}
-
-
-    # HTTPS server
-    #
-    #server {
-    #    listen       443 ssl;
-    #    server_name  localhost;
-
-    #    ssl_certificate      cert.pem;
-    #    ssl_certificate_key  cert.key;
-
-    #    ssl_session_cache    shared:SSL:1m;
-    #    ssl_session_timeout  5m;
-
-    #    ssl_ciphers  HIGH:!aNULL:!MD5;
-    #    ssl_prefer_server_ciphers  on;
-
-    #    location / {
-    #        root   html;
-    #        index  index.html index.htm;
-    #    }
-    #}
     include servers/*;
 }
 ```
