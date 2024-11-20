@@ -568,9 +568,19 @@ location ^~ /xishan {
 
 ![](images/026.png)
 
+`import.meta.env` 值有哪些：
+
+![](images/029.png)
+
 带上前缀：`import.meta.env.VITE_BASE_API_URL`
 
 ![](images/028.png)
+
+或者带上 `import.meta.env.BASE_URL`
+
+![](images/030.png)
+
+
 
 * 运行`development环境`：`pnpm dev`   
 * 运行`production` 环境：`pnpm dev:production`   
