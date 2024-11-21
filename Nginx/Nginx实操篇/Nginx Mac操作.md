@@ -525,11 +525,23 @@ location ^~ /xishan {
 
 
 
+## 9. PDF预览【报错】
 
+* **报错：**
 
+    Failed to load module script: Expected a JavaScript module script but the server responded with a MIME type of "application/octet-stream". Strict MIME type checking is enforced for module scripts per HTML spec.
 
+* **原因：**
 
+[MIME 类型](https://so.csdn.net/so/search?q=MIME 类型&spm=1001.2101.3001.7020)设置不正确： 服务器返回的文件 MIME 类型不正确。浏览器期望模块脚本的 MIME 类型为 application/javascript。如果服务器返回的 MIME 类型不是这个，浏览器会拒绝加载它，并显示这个错误。
 
+由于nginx无法识别js文件，从而在http header中错误的使用 Content-Type:application/octet-stream 来传输mjs文件，导致浏览器端认为它不是一个合法的js脚本。
+
+在nginx的默认mime.types文件中没有为mjs扩展名设置条目，这意味着它将被作为application/octet-stream而不是application/javascript进行服务。可以通过在服务器、http或location块中显式包含mime.types并添加一个types块来设置mjs文件的MIME类型和文件扩展名：
+
+* 解决：
+
+![](images/031.png)
 
 
 
