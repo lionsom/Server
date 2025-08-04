@@ -1,16 +1,18 @@
+* [深入理解 Java JDK —— 让我们从基础到进阶](https://developer.aliyun.com/article/1649872?scm=20140722.ID_community@@article@@1649872._.ID_community@@article@@1649872-OR_rec-PAR1_0b16399317537176119013414ed6b2-V_1-RL_community@@article@@1143607)
 
 
 
 
-# Java 简介
+
+# 一、Java 简介
 
 Java是由Sun Microsystems公司于1995年5月推出的Java面向对象程序设计语言和Java平台的总称。由James Gosling和同事们共同研发，并在1995年正式推出。
 
 Java分为三个体系：
 
 - JavaSE（J2SE）（Java2 Platform Standard Edition，java平台标准版）
-- JavaEE(J2EE)(Java 2 Platform,Enterprise Edition，java平台企业版)
-- JavaME(J2ME)(Java 2 Platform Micro Edition，java平台微型版)。
+- JavaEE（J2EE）（Java 2 Platform Enterprise Edition，java平台企业版）
+- JavaME（J2ME）（Java 2 Platform Micro Edition，java平台微型版）。
 
 2005年6月，JavaOne大会召开，SUN公司公开Java SE 6。此时，Java的各种版本已经更名以取消其中的数字"2"：J2EE更名为Java EE, J2SE更名为Java SE，J2ME更名为Java ME。
 
