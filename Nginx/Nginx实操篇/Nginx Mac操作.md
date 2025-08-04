@@ -312,7 +312,7 @@ http {
 
 
 
-# 六、Vue项目部署到Nginx
+# 六、Vue项目部署到Nginx ⭐️⭐️
 
 https://juejin.cn/post/6844904096973979662
 
