@@ -1,143 +1,33 @@
-* [深入理解 Java JDK —— 让我们从基础到进阶](https://developer.aliyun.com/article/1649872?scm=20140722.ID_community@@article@@1649872._.ID_community@@article@@1649872-OR_rec-PAR1_0b16399317537176119013414ed6b2-V_1-RL_community@@article@@1143607)
 
 
-
-
-
-# 一、Java 简介
-
-Java是由Sun Microsystems公司于1995年5月推出的Java面向对象程序设计语言和Java平台的总称。由James Gosling和同事们共同研发，并在1995年正式推出。
-
-Java分为三个体系：
-
-- JavaSE（J2SE）（Java2 Platform Standard Edition，java平台标准版）
-- JavaEE（J2EE）（Java 2 Platform Enterprise Edition，java平台企业版）
-- JavaME（J2ME）（Java 2 Platform Micro Edition，java平台微型版）。
-
-2005年6月，JavaOne大会召开，SUN公司公开Java SE 6。此时，Java的各种版本已经更名以取消其中的数字"2"：J2EE更名为Java EE, J2SE更名为Java SE，J2ME更名为Java ME。
-
-
-
-## Java应用运行机制
-
-计算机高级语言主要有『编译型』和『解释型』，Java语言是这两种的结合。
-
-``` 
-源文件(*.java) -> Java编译器(javac) -> 字节码文件(*.class) -> JRE[类装载器 -> 字节码校验 -> 解释器] -> 系统平台
-```
-
-
-
-## JVM、JRE、JDK
-
-JVM（Java Virtual Mechine）：Java虚拟机。
-
-JRE（Java Runtime Environment）：Java运行环境，包含：Java虚拟机、库函数、运行Java程序必须的文件。
-
-JDK（Java Development Kit）：Java开发工具包，包含JRE、编译器、调试器等用于程序开发的文件。
-
-* 如果只要运行Java程序，只需要JRE即可。
-* 如果开发Java程序，就需要安装JDK。
-
-![](media/0000.png)
-
-![](media/0001.png)
-
-![](media/0002.png)
-
-
-
-## 跨平台
-
-> 因为有了虚拟机，来适配不同的平台。
-
-```
-																					  JVM for Unix
-源文件(*.java) -> 字节码文件(*.class) ------> JVM for Windows
-																					  JVM for Other
-```
-
-
-
-## JDK安装
-
-Oracle官网：https://www.oracle.com/java/technologies/javase-jdk8-downloads.html
-
-```
-// 查看JDK版本
-$ ➜ java -version
-java version "1.8.0_191"
-Java(TM) SE Runtime Environment (build 1.8.0_191-b12)
-Java HotSpot(TM) 64-Bit Server VM (build 25.191-b12, mixed mode)
-
-// 查看JDK安装版本 & 路径
-$ ➜ /usr/libexec/java_home -V
-Matching Java Virtual Machines (1):
-    1.8.0_191, x86_64:	"Java SE 8"	/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home
-
-/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home
-```
-
-
-
-## JDK环境变量
-
-```objectivec
-JAVA_HOME       配置JDK安装路径
-CLASSPAHT       配置类库文件位置
-PATH            配置JDK命令文件位置
-  
-// 具体路径
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home
-  
-export CLASSPAHT=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
-
-export PATH=$JAVA_HOME/bin:$PATH:
-```
-
-用 `source .bash_profile` 使配置生效，输入 `echo $JAVA_HOME` 显示刚才配置的路径。
-
-```
-➜  ~ echo $JAVA_HOME 
-/Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home
-```
-
-**遇到问题： `echo $JAVA_HOME` 不生效**
-
-oh-my-zsh的配置文件为`.zshrc`，而默认shell（bash）的配置文件为`.bash_profile` 。
-
-* 方法一：在.zshrc中添加环境变量，`source.zshrc` 使Zsh配置文件生效。
-
-* 方法二：在.bash_profile添加环境变量，在.zshrc中添加代码：`source ~/.bash_profile`，再运行`source.zshrc` 使Zsh配置文件生效。
-
-
+# 一、Java基本语法
 
 ## 第一个Java程序
 
-```
+注意点:
+
+1. 类名与文本名称必须一致：Welcome.java
+2. javac Welcome.java 生成 Welcome.class、test.class
+3. 运行 java Welcome
+4. 一个源文件可以对应多个类，但只允许一个public类；
+5. main方法是入口；
+
+```java
 public class Welcome {
 	public static void main(String[] args) {
 		System.out.println("hello world");
 	}
 }
+
 class test {
 }
-
-// 注意点
-1.类名与文本名称必须一致：Welcome.java
-2.javac Welcome.java 生成 Welcome.class、test.class
-3.运行 java Welcome
-4.一个源文件可以对应多个类，但只允许一个public类；
-5.main方法是入口；
 ```
 
 
-
-# 基本概念
 
 ## 注释
 
-```
+```java
 // 单行注释
 
 /**/  批量注释
@@ -154,7 +44,7 @@ class test {
 
 【注意】：Java采用Unicode字符集，而不是ASCII码，所以命名参数可以使用中文。
 
-```
+```java
 int 变量A = 10;    // 正确
 ```
 
@@ -168,7 +58,7 @@ int 变量A = 10;    // 正确
 
 ## 变量分类
 
-```
+```java
 public class BallGame {
 
     int A; 			// 成员变量，从属于对象，自动初始化。
@@ -191,7 +81,7 @@ public class BallGame {
 
 ## 常量
 
-```
+```java
 public class BallGame {
 		int age = 10;
 		String name = "Tom";   // "Tom"为常量，name为变量，仍可赋值，name = "Jack";
@@ -236,7 +126,7 @@ public class BallGame {
 
 > Java语言的整型默认是int类型，后面加L/l变成long类型。
 
-```
+```java
 public static void main(String[] args) {
         int a = 15;
         int b = 0b1101; // 以0b开头的是二进制
@@ -272,7 +162,7 @@ public static void main(String[] args) {
 * 十进制数：3.14、0.214
 * 科学计数法：314e2、314E2、314E-2
 
-```
+```java
 double f1 = 314e2;		// = 314*10^2 = 31400
 double f2 = 314E2;		// = 314*10^2 = 31400 
 double f3 = 314E-2;		// = 314*10^-2 = 3.14
@@ -280,7 +170,7 @@ double f3 = 314E-2;		// = 314*10^-2 = 3.14
 
 > Java语言的浮点型默认是double类型，后面加F/f变成float类型。
 
-```
+```java
 float f4 = 3.14F;		// 后面加F/f，变成float类型
 double f5 = 3.14;
 ```
@@ -292,7 +182,7 @@ double f5 = 3.14;
 > * BigInteger：实现了任意精度的整数运算；
 > * BigDecimal：实现了任意精度的浮点数运算；
 
-```
+```java
 // 浮点数运算错误方法
 double A = 1.1 / 10.0;		// 0.11000000000000001
 double B = 0.11;					// 0.11
@@ -321,7 +211,7 @@ System.out.println(1.0F - 0.1F - 0.1F - 0.1F - 0.1F - 0.1F);	// 0.50000000000000
 
 > char类型用来表示在Unicode编码中的字符。Unicode占2个字节，允许有65526个字符。
 
-```
+```java
 // 举例
 char cA = 'T';
 char cV = '林';
@@ -332,7 +222,7 @@ char cC = '\u0061';	// = a, 字符型的十六进制值表示，十六进制从'
 
 ![](media/004.png)
 
-```
+```java
 System.out.println('a'+'b');   // 195，原因：+号类型转换，将char转为数字
 
 System.out.println(""+'a'+'b');  // ab
@@ -391,7 +281,7 @@ b
 
 ### 字符串连接符
 
-```
+```java
 String a = "3";
 int b = 4;
 int c = 5;
@@ -417,7 +307,7 @@ System.out.println(b+c+a);	// 93
 
 ![](media/012.png)
 
-```
+```java
 int a = 123;
 short A = a;		// 合法
 
@@ -427,7 +317,7 @@ short B = b;		// 非法，超过范围。
 
 ### 强制类型转换
 
-```
+```java
 double x = 3.99;
 int nx = (int)x;   // = 3，非四舍五入，而是舍弃
 
@@ -441,7 +331,7 @@ System.out.println((char)d1);	// = b
 
 ####溢出
 
-```
+```java
 int money = 1000000000;
 int year = 30;
 int total = money * year;   // -64771072 溢出
@@ -457,7 +347,7 @@ long total2 = money * (long)year;	// 30000000000
 
 ## 获取键盘
 
-```
+```java
 // 导入Scanner包
 import java.util.Scanner;
 
@@ -483,7 +373,7 @@ public class scanner {
 
 > 类似于goto关键字，可以跳到指定代码。
 
-```
+```java
 // 输出 100 - 150 之间所有的质数
 // 这里我们使用标签continue跳转到外部循环。
 
@@ -515,7 +405,7 @@ public class testLabelContinue {
 
 * 方法声明格式
 
-  ```
+  ```java
   [修饰词1，修饰词2，...] 返回值类型 方法名(形式参数列表) {
   		Java语句......
   }
@@ -523,7 +413,7 @@ public class testLabelContinue {
 
 * 简单使用
 
-  ```
+  ```java
   public class Method {
       public static void main(String[] args) {
           // 通过对象调用普通方法
@@ -555,7 +445,7 @@ public class testLabelContinue {
 >
 > 他们是完全不同的两个方法。
 
-```
+```java
 public class Method {
     public static void main(String[] args) {
         // 方法前加上 public static 就可以直接使用了。
@@ -581,7 +471,7 @@ public class Method {
 >
 > 缺点：递归调用占用大量堆栈，内存消耗大，调用层次越多，耗时越多
 
-```
+```java
 public class Recursion {
     public static void main(String[] args){
         // 获取1970至今的时间，毫秒
